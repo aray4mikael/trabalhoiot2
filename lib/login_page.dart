@@ -1,5 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'my_home_page.dart';
 
@@ -9,10 +9,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
-  String _email = '';
-  String _password = '';
-
+  String _email = "user_app@monitoramento.com";
+  String _password = "monitoramento";
+  late final snackBar;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,9 +23,9 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 'LOGIN',
-                style: GoogleFonts.montserrat(
+                style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
@@ -38,6 +39,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: [
                       TextFormField(
+                        initialValue: 'user_app@monitoramento.com',
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Digite seu email';
@@ -54,6 +56,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 16),
                       TextFormField(
+                        initialValue: 'monitoramento',
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Digite sua senha';
@@ -72,24 +75,19 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: 32),
                       ElevatedButton(
                         onPressed: () {
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => MyHomePage()), // Navegue para a tela de homepage
-                          );
-
+                          _signInWithEmailAndPassword();
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.black,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          padding:
-                          EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 16),
                         ),
                         child: Text(
                           'ENTRAR',
-                          style: GoogleFonts.montserrat(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
@@ -105,5 +103,32 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _signInWithEmailAndPassword() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        await _auth.signInWithEmailAndPassword(
+          email: _email,
+          password: _password,
+        );
+        // ignore: use_build_context_synchronously
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MyHomePage()),
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          snackBar = const SnackBar(
+            content: Text('Usuário não encontrado.'),
+          );
+        } else if (e.code == 'wrong-password') {
+          snackBar = const SnackBar(
+            content: Text('Senha incorreta.'),
+          );
+        }
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
+    }
   }
 }
