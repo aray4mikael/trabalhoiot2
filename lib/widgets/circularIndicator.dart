@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class CircularIndicator extends StatefulWidget {
-  double valor = 0.0;
+  double valor;
 
   CircularIndicator({super.key, required this.valor});
 

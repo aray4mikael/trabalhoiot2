@@ -84,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ],
                       ),
                       Text(
-                        "$temperatura ºC",
+                        "${temperatura.toStringAsFixed(2)} ºC",
                         style: const TextStyle(color: Colors.white, fontSize: 30),
                       )
                     ],
@@ -138,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            CircularIndicator(valor: umidadeSolo),
+                            CircularIndicator(valor: double.parse(umidadeSolo.toStringAsFixed(2))),
                             const Padding(
                               padding: EdgeInsets.only(top: 10),
                               child: Text("Umidade do Solo",
@@ -306,8 +306,8 @@ class _MyHomePageState extends State<MyHomePage> {
     DatabaseReference db_long =
         FirebaseDatabase.instance.ref('SensoresRealTime/long');
 
-    db_lat.set(position.latitude);
-    db_long.set(position.longitude);
+    db_lat.set(position.latitude.toString());
+    db_long.set(position.longitude.toString());
   }
 
   Color statusEstacao() {
@@ -337,8 +337,8 @@ class _MyHomePageState extends State<MyHomePage> {
           width: double.infinity,
           alignment: Alignment.center,
           margin: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: statusEstacao(),
+            decoration: const BoxDecoration(
+                color: Colors.red,//statusEstacao(),
                 borderRadius: BorderRadius.all(Radius.circular(10))),
             child: const Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -362,8 +362,8 @@ class _MyHomePageState extends State<MyHomePage> {
           width: double.infinity,
           alignment: Alignment.center,
           margin: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              color: statusEstacao(),
+          decoration: const BoxDecoration(
+              color: Colors.green,//statusEstacao(),
               borderRadius: BorderRadius.all(Radius.circular(10))),
           child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -382,8 +382,8 @@ class _MyHomePageState extends State<MyHomePage> {
           width: double.infinity,
           alignment: Alignment.center,
           margin: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              color: statusEstacao(),
+          decoration: const BoxDecoration(
+              color: Colors.yellow,//statusEstacao(),
               borderRadius: BorderRadius.all(Radius.circular(10))),
           child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
